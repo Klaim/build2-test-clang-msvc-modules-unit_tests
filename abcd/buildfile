@@ -1,0 +1,61 @@
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+import test_libs += doctest%lib{doctest}
+
+./: lib{abcd} doc{README.md} manifest
+
+./: lib{abcd}: libul{abcd}: {hxx ixx txx cxx mxx}{* -*.test...} $impl_libs $intf_libs
+
+# Unit tests.
+#
+exe{*.test}:
+{
+  test = true
+  install = false
+}
+
+for t: cxx{*.test...}
+{
+  d = $directory($t)
+  n = $name($t)...
+
+  ./: $d/exe{$n}: $t $d/{hxx ixx txx}{+$n} $d/testscript{+$n} $test_libs
+  $d/exe{$n}: libul{abcd}: bin.whole = false
+}
+
+hxx{export}@./: cxx.importable = false
+
+# Build options.
+#
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+
+{hbmia obja}{*}: cxx.poptions += -DABCD_STATIC_BUILD
+{hbmis objs}{*}: cxx.poptions += -DABCD_SHARED_BUILD
+
+# Export options.
+#
+lib{abcd}:
+{
+  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.libs = $intf_libs
+}
+
+liba{abcd}: cxx.export.poptions += -DABCD_STATIC
+libs{abcd}: cxx.export.poptions += -DABCD_SHARED
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+#
+if $version.pre_release
+  lib{abcd}: bin.lib.version = "-$version.project_id"
+else
+  lib{abcd}: bin.lib.version = "-$version.major.$version.minor"
+
+# Install recreating subdirectories.
+#
+{hxx ixx txx}{*}:
+{
+  install         = include/
+  install.subdirs = true
+}
