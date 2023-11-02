@@ -1,27 +1,29 @@
 module;
 
-#include <iostream>
-#include <stdexcept>
-#include <string>
+// #include <iostream>
+// #include <stdexcept>
+// #include <string>
 
-#include "export.hpp"
+#include "abcd_export.hpp"
 
 export module abcd;
 
-export namespace abcd
+namespace abcd
 {
   // Print a greeting for the specified name into the specified
   // stream. Throw std::invalid_argument if the name is empty.
   //
+  export
   ABCD_SYMEXPORT
-  void say_hello (std::ostream& o, const std::string& n)
+  void say_hello (/*std::ostream& o, const std::string& n*/)
   {
-    if (n.empty ())
-      throw std::invalid_argument ("empty name");
+    // if (n.empty ())
+    //   throw std::invalid_argument ("empty name");
 
-    o << "Hello, " << n << '!' << std::endl;
+    // o << "Hello, " << n << '!' << std::endl;
   }
 
+  export
   ABCD_SYMEXPORT
   int some_func(int value)
   {
