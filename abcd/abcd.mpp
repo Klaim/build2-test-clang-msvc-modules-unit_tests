@@ -14,7 +14,7 @@ export namespace abcd
   // stream. Throw std::invalid_argument if the name is empty.
   //
   ABCD_SYMEXPORT
-  void say_hello (/*std::ostream& o, const std::string& n*/);
+  void say_hello (std::ostream& o, const std::string& n);
 
   ABCD_SYMEXPORT
   int some_func(int value);
@@ -29,12 +29,12 @@ namespace abcd
   // Print a greeting for the specified name into the specified
   // stream. Throw std::invalid_argument if the name is empty.
   //
-  void say_hello (/*std::ostream& o, const std::string& n*/)
+  void say_hello (std::ostream& o, const std::string& n)
   {
-    // if (n.empty ())
-    //   throw std::invalid_argument ("empty name");
+    if (n.empty ())
+      throw std::invalid_argument ("empty name");
 
-    // o << "Hello, " << n << '!' << std::endl;
+    o << "Hello, " << n << '!' << std::endl;
   }
 
   int some_func(int value)
